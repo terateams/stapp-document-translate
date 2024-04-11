@@ -30,7 +30,7 @@ def main():
                     if appuid:
                         page_state.app_uid = appuid
                         page_state.apikey = apikey
-                        apikey_box.empty()
+                        # apikey_box.empty()
 
             if not page_state.app_uid:
                 st.error("Auth is invalid")
