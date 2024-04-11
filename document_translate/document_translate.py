@@ -11,6 +11,8 @@ load_dotenv()
 
 st.set_page_config(page_title="文档翻译", page_icon="🌐")
 
+page_state = PageSessionState("translate_document")
+page_state.initn_attr("latest_target_file", None)
 
 def main():
     with st.sidebar:
@@ -43,8 +45,7 @@ def main():
 
     start_time = time.time()
 
-    page_state = PageSessionState("translate_document")
-    page_state.initn_attr("latest_target_file", None)
+
 
     # 用于存储临时文件
     document_tempdir = get_global_datadir("temp_translate")
