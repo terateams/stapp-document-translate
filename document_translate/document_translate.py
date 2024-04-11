@@ -9,12 +9,12 @@ from .session import PageSessionState
 
 load_dotenv()
 
-st.set_page_config(page_title="文档翻译", page_icon="🌐")
 
-page_state = PageSessionState("translate_document")
-page_state.initn_attr("latest_target_file", None)
 
 def main():
+    st.set_page_config(page_title="文档翻译", page_icon="🌐")
+    page_state = PageSessionState("translate_document")
+    page_state.initn_attr("latest_target_file", None)
     with st.sidebar:
         st.title("🌐 文档翻译")
         tab1, tab2 = st.tabs(["参数设置", "关于"])
