@@ -51,9 +51,6 @@ def remote_file_to_localfile(dir: str, new_filename: str = None, file_url: str =
     return filename
 
 
-import requests
-import json
-
 def translate_document(file_path, target_lang="zh-CN", apikey=None):
     url = os.getenv("TEAMSGPT_APISITE", "https://api.teamsgpt.net") + "/api/document/translate"
     # Prepare headers and data
