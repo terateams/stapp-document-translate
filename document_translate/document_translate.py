@@ -1,6 +1,6 @@
 import uuid
 import streamlit as st
-from .common import get_global_datadir
+from .common import check_apptoken_from_apikey, get_global_datadir
 from .common import remote_file_to_localfile, translate_document
 import os
 import time
@@ -17,6 +17,22 @@ def main():
         st.title("🌐 文档翻译")
         tab1, tab2 = st.tabs(["参数设置", "关于"])
         with tab1:
+            apikey_box = st.empty()
+            if not page_state.app_uid:
+                apikey = st.query_params.get("apikey")
+                if not apikey:
+                    apikey = apikey_box.text_input("请输入 API Key", type="password")
+
+                if apikey:
+                    appuid = check_apptoken_from_apikey(apikey)
+                    if appuid:
+                        page_state.app_uid = appuid
+                        page_state.apikey = apikey
+                        apikey_box.empty()
+
+            if not page_state.app_uid:
+                st.error("Auth is invalid")
+                st.stop()
             param_box = st.container()
 
         with tab2:
