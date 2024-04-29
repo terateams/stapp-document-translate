@@ -65,27 +65,30 @@ def main():
 
     if uploaded_file and translate_action:
         with st.spinner("正在翻译中..."):
-            basename = os.path.basename(uploaded_file.name)
-            suffix = os.path.splitext(uploaded_file.name)[-1][1:].lower()
-            if suffix in ["srt", "txt"]:
-                suffix = "txt"
-            temp_file = os.path.join(document_tempdir, f"{uuid.uuid4().hex}.{suffix}")
-            with open(temp_file, "wb") as f:
-                f.write(uploaded_file.getvalue())
+            try:
+                basename = os.path.basename(uploaded_file.name)
+                suffix = os.path.splitext(uploaded_file.name)[-1][1:].lower()
+                if suffix in ["srt", "txt"]:
+                    suffix = "txt"
+                temp_file = os.path.join(document_tempdir, f"{uuid.uuid4().hex}.{suffix}")
+                with open(temp_file, "wb") as f:
+                    f.write(uploaded_file.getvalue())
 
-            resp = translate_document(temp_file, language)
-            if resp:
-                result = resp[0]
-                target_name = f"target_{basename}"
-                remote_file_to_localfile(document_tempdir, target_name, result["target"])
-                page_state.latest_target_file = os.path.join(document_tempdir, target_name)
-                st.download_button(
-                    label=f"下载文档",
-                    data=open(page_state.latest_target_file, "rb"),
-                    file_name=page_state.latest_target_file,
-                )
-                st.write(f"Time cast {time.time()-start_time} 秒")
-                st.write(result)
+                resp = translate_document(temp_file, language)
+                if resp:
+                    result = resp[0]
+                    target_name = f"target_{basename}"
+                    remote_file_to_localfile(document_tempdir, target_name, result["target"])
+                    page_state.latest_target_file = os.path.join(document_tempdir, target_name)
+                    st.download_button(
+                        label=f"下载文档",
+                        data=open(page_state.latest_target_file, "rb"),
+                        file_name=page_state.latest_target_file,
+                    )
+                    st.write(f"Time cast {time.time()-start_time} 秒")
+                    st.write(result)
+            except Exception as e:
+                st.warning(f"翻译失败: {e}")
 
     if page_state.latest_target_file:
         param_box.download_button(
